@@ -1,12 +1,17 @@
 from flask import Flask, render_template, request, jsonify
 import sqlite3
 import json
+import os
 
 app = Flask(__name__)
 
+# Get absolute path to ensure DB works on Render
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "whiteboard.db")
+
 # Initialize DB
 def init_db():
-    conn = sqlite3.connect("whiteboard.db")
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS boards (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,7 +31,7 @@ def save():
     board_name = content.get("name", "Untitled")
     data = json.dumps(content.get("data", {}))
 
-    conn = sqlite3.connect("whiteboard.db")
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("INSERT INTO boards (name, data) VALUES (?, ?)", (board_name, data))
     conn.commit()
@@ -36,7 +41,7 @@ def save():
 
 @app.route("/load", methods=["GET"])
 def load():
-    conn = sqlite3.connect("whiteboard.db")
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT id, name FROM boards")
     boards = [{"id": row[0], "name": row[1]} for row in c.fetchall()]
@@ -45,7 +50,7 @@ def load():
 
 @app.route("/load/<int:board_id>", methods=["GET"])
 def load_board(board_id):
-    conn = sqlite3.connect("whiteboard.db")
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT data FROM boards WHERE id=?", (board_id,))
     row = c.fetchone()
