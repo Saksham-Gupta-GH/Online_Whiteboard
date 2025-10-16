@@ -1,51 +1,69 @@
 from flask import Flask, render_template, request, jsonify
-import json
+import sqlite3
 import os
+import json
 
 app = Flask(__name__)
 
-DATA_FILE = "whiteboard_data.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "whiteboard.db")
 
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS boards (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT,
+                    data TEXT
+                )''')
+    conn.commit()
+    conn.close()
 
-def init_storage():
-    """Create an empty data file if it doesn't exist."""
-    if not os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "w") as f:
-            json.dump([], f)
-
-
+# Ensure DB is initialized before handling requests
 @app.before_request
-def ensure_data_file_exists():
-    """Ensure the whiteboard data file exists before handling requests."""
-    if not hasattr(app, "has_initialized"):
-        init_storage()
-        app.has_initialized = True
-
+def ensure_db():
+    if not hasattr(app, "db_initialized"):
+        init_db()
+        app.db_initialized = True
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
-
 @app.route("/save", methods=["POST"])
-def save_whiteboard():
-    """Save drawn whiteboard data to file."""
-    data = request.get_json()
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f)
-    return jsonify({"status": "success"})
+def save():
+    content = request.json
+    board_name = content.get("name", "Untitled")
+    data = json.dumps(content.get("data", {}))
 
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("INSERT INTO boards (name, data) VALUES (?, ?)", (board_name, data))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"status": "success", "message": "Board saved!"})
 
 @app.route("/load", methods=["GET"])
-def load_whiteboard():
-    """Load existing whiteboard data."""
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            data = json.load(f)
-    else:
-        data = []
-    return jsonify(data)
+def load():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT id, name FROM boards")
+    boards = [{"id": row[0], "name": row[1]} for row in c.fetchall()]
+    conn.close()
+    return jsonify(boards)
 
+@app.route("/load/<int:board_id>", methods=["GET"])
+def load_board(board_id):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT data FROM boards WHERE id=?", (board_id,))
+    row = c.fetchone()
+    conn.close()
+    if row:
+        return jsonify(json.loads(row[0]))
+    return jsonify({"error": "Board not found"}), 404
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    init_db()
+    app.run(host="0.0.0.0", port=10000)
