@@ -9,7 +9,7 @@ app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "whiteboard.db")
 
-# Initialize DB
+# Initialize DB (runs once at startup)
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -20,6 +20,11 @@ def init_db():
                 )''')
     conn.commit()
     conn.close()
+
+# ✅ Make sure database and table exist before any request
+@app.before_first_request
+def initialize():
+    init_db()
 
 @app.route("/")
 def index():
