@@ -1,114 +1,106 @@
-/* General Page Styling */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-align: center;
-    background: linear-gradient(to bottom right, #e3f2fd, #f8f9fa);
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
+/* Reset */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-/* Header Title */
-h1 {
-    background: linear-gradient(90deg, #007bff, #00b4d8);
-    color: white;
-    width: 100%;
-    padding: 15px 0;
-    margin: 0 0 20px 0;
-    font-size: 24px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-/* Toolbar Styling */
-.toolbar {
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    display: inline-flex;
+/* Base layout */
+body {
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    background-color: #f7f7f7;
+    color: #222;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    padding: 10px 15px;
-    margin-bottom: 20px;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-.toolbar button, 
+/* Header */
+h1 {
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: 0.3px;
+    margin-bottom: 15px;
+    color: #111;
+}
+
+/* Toolbar */
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Buttons and select */
+.toolbar button,
 .toolbar select {
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 14px;
     font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    background: #222;
+    color: #fff;
+    transition: background 0.15s ease;
 }
 
 .toolbar button:hover {
-    background: #0056b3;
-    transform: scale(1.05);
+    background: #444;
 }
 
 .toolbar select {
-    background: #f8f9fa;
-    color: #333;
+    background: #fafafa;
+    color: #222;
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+}
+
+/* Canvas */
+canvas {
+    background: #fff;
     border: 1px solid #ccc;
     border-radius: 6px;
-    padding: 8px;
-    cursor: pointer;
-}
-
-/* Canvas Styling */
-canvas {
-    border: 2px solid #333;
-    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     cursor: crosshair;
-    margin-top: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.15);
-    transition: transform 0.2s ease;
 }
 
-canvas:hover {
-    transform: scale(1.01);
-}
-
-/* Sticky Notes (drawn on canvas) */
+/* Sticky notes (drawn via JS) */
 .note {
-    background-color: yellow;
-    color: black;
-    border: 1px solid #ccc;
+    background-color: #fffa8b;
+    color: #111;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     padding: 5px;
-    width: 100px;
-    height: 50px;
-    position: absolute;
-    border-radius: 5px;
+    font-size: 13px;
 }
 
-/* Utility: Success Message Popup */
+/* Light fade-in effect when page loads */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+body {
+    animation: fadeIn 0.4s ease;
+}
+
+/* Optional popup message style (if used later) */
 .message {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #28a745;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    font-size: 14px;
-    animation: fadeInOut 2s forwards;
-}
-
-/* Message Fade Animation */
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translateY(20px); }
-    10% { opacity: 1; transform: translateY(0); }
-    90% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(20px); }
+    bottom: 16px;
+    right: 16px;
+    background: #111;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-size: 13px;
+    opacity: 0.95;
 }
