@@ -1,19 +1,114 @@
+/* General Page Styling */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
-    background: #f4f4f9;
+    background: linear-gradient(to bottom right, #e3f2fd, #f8f9fa);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
+/* Header Title */
 h1 {
-    margin: 10px;
+    background: linear-gradient(90deg, #007bff, #00b4d8);
+    color: white;
+    width: 100%;
+    padding: 15px 0;
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+/* Toolbar Styling */
 .toolbar {
-    margin-bottom: 10px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    margin-bottom: 20px;
 }
 
+.toolbar button, 
+.toolbar select {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.toolbar button:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+}
+
+.toolbar select {
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+/* Canvas Styling */
 canvas {
     border: 2px solid #333;
     background: white;
     cursor: crosshair;
+    margin-top: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+}
+
+canvas:hover {
+    transform: scale(1.01);
+}
+
+/* Sticky Notes (drawn on canvas) */
+.note {
+    background-color: yellow;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 5px;
+    width: 100px;
+    height: 50px;
+    position: absolute;
+    border-radius: 5px;
+}
+
+/* Utility: Success Message Popup */
+.message {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    font-size: 14px;
+    animation: fadeInOut 2s forwards;
+}
+
+/* Message Fade Animation */
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
 }
